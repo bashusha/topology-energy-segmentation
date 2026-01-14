@@ -1,0 +1,56 @@
+\section{Synthetic Experiments}
+
+\subsection{Motivation}
+
+Real-world datasets rarely provide ground truth about structural heterogeneity.
+To study the behavior of the proposed diagnostics under controlled conditions,
+we construct synthetic datasets in which the degree of structural clarity is
+systematically varied.
+
+Rather than generating independent datasets, we adopt a
+\emph{progressive corruption protocol}: starting from a clean, well-structured
+dataset, we incrementally introduce scale distortions and noise.
+This setup mirrors practical scenarios in which data quality degrades over time
+due to changes in exposure, measurement error, or external conditions.
+
+The goal of these experiments is not to optimize performance, but to examine
+when segmentation emerges, stabilizes, or dissolves as structural signals become
+weaker or obscured by noise.
+
+\subsection{Protocol: \texorpdfstring{Time $\rightarrow$ Scale $\times$ Noise}{Time to Scale x Noise}}
+
+
+Each dataset is organized into discrete time slices.
+At the initial time point, the data exhibit clear structural properties with
+minimal noise.
+Subsequent slices apply controlled transformations designed to progressively
+degrade structural identifiability.
+
+Specifically, we consider:
+\begin{itemize}
+\item scaling of the target variable to simulate exposure growth or changing
+magnitude;
+\item additive noise applied to covariates and/or targets to reduce the
+signal-to-noise ratio.
+\end{itemize}
+
+This design allows us to observe how diagnostic signals evolve as the data move
+from clearly structured regimes toward ambiguity and noise-dominated settings.
+
+\subsection{Evaluation criteria}
+
+Diagnostic outcomes are assessed along several complementary dimensions:
+\begin{itemize}
+\item stability of the number of detected zones;
+\item localization of high-energy boundaries in feature space;
+\item improvement of local predictive models relative to a global baseline;
+\item consistency of segmentation across time slices.
+\end{itemize}
+
+Importantly, the absence of segmentation is treated as a valid and informative
+outcome, indicating insufficient evidence to justify increased structural
+complexity.
+
+From a Bayesian perspective, such outcomes correspond to posterior support
+remaining concentrated on the global structural hypothesis despite increasing
+data variability.

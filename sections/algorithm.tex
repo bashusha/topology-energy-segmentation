@@ -1,0 +1,30 @@
+\begin{algorithm}[h]
+\caption{Topology-Aware Energy-Based Segmentation}
+\begin{algorithmic}[1]
+
+\STATE \textbf{Input:}
+Covariates $X=\{X_i\}_{i=1}^n$, targets $F=\{F_i\}_{i=1}^n$,
+number of landmarks $m$, neighborhood size $k$,
+complexity penalty $\alpha$,
+surrogate disagreement $\tilde{w}$,
+refined disagreement $w$ (optional)
+
+\STATE \textbf{Output:}
+Zone labels $z_i$ for landmarks, diagnostic metadata
+
+\STATE Select landmarks $\mathcal{L} \subset \{1,\dots,n\}$, $|\mathcal{L}|=m$
+\STATE Construct kNN graph $G=(V,E)$ over $\{X_i\}_{i\in\mathcal{L}}$
+\STATE Compute surrogate edge weights $\tilde{w}_{ij}$
+
+\STATE Initialize each landmark as a singleton zone
+\STATE Iteratively merge zones to minimize surrogate energy
+\STATE Select candidate partitions along energy path
+
+\IF{refinement enabled}
+  \STATE Recompute $w_{ij}$ and evaluate refined energy
+\ENDIF
+
+\STATE Select final partition or return global model
+
+\end{algorithmic}
+\end{algorithm}

@@ -1,0 +1,17 @@
+\section{Problem Formulation}
+
+\subsection{Segmentation as a Diagnostic Hypothesis}
+
+We consider a dataset consisting of covariates $X \in \mathbb{R}^d$ and target variables $F$, observed over discrete time periods. A global predictive model implicitly assumes that the conditional relationship between $X$ and $F$ is structurally homogeneous across the domain of interest.
+
+Segmentation introduces an alternative hypothesis: that the data are better described by multiple regimes or zones, each governed by a locally coherent relationship between predictors and outcomes. Importantly, segmentation increases model complexity and operational burden, and therefore should be justified by sufficiently strong evidence.
+
+In this work, segmentation is not treated as an optimization goal, but as a \emph{diagnostic outcome}: an indication that structural uncertainty in the model cannot be ignored.
+
+From a Bayesian perspective, this diagnostic view can be interpreted as a comparison between competing structural hypotheses with different effective dimensionalities, where the absence of segmentation corresponds to a parsimonious prior preference for a single global model.
+
+\subsection{Problem Setting and Inputs}
+
+We consider observations $(X_i, F_i)$, where $X_i$ denotes a (possibly mixed-type) covariate vector and $F_i$ is a target variable of interest. The goal is to detect regions of the covariate space where a single global predictive relationship between $X$ and $F$ fails.
+
+The output of the diagnostic procedure is a partition of selected landmark observations into a small number of zones, together with diagnostic quantities that explain and support the resulting segmentation. Importantly, the procedure may also return the trivial single-zone solution, indicating insufficient evidence to justify structural separation.

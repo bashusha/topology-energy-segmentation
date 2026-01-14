@@ -1,0 +1,16 @@
+\begin{abstract}
+
+In many applied modeling settings, performance degradation is addressed by rebuilding or retuning predictive models in response to detected drift.
+While effective in some cases, such interventions may obscure the underlying cause of instability, particularly when degradation arises from latent structural heterogeneity rather than gradual distributional change.
+In this work, we propose a topology-aware, energy-based diagnostic framework for identifying when segmentation of a predictive model is warranted.
+
+Throughout the paper, we use the term ``topology-aware'' in a loose but standard sense, referring to methods that explicitly respect neighborhood structure encoded by a graph, rather than to formal tools from topological data analysis such as persistent homology.
+
+Our approach treats segmentation not as a primary modeling objective, but as a diagnostic hypothesis about structural uncertainty in the relationship between covariates and outcomes.
+By combining local geometric structure in feature space with discrepancies in target behavior, we construct an energy functional whose minimization reveals stable zones of structural conflict.
+The resulting segmentation highlights regions where a global model fails systematically, while avoiding overreaction to noise.
+
+The framework admits both frequentist and Bayesian interpretations: as a regularized risk minimization problem with complexity penalties, or as an implicit evidence-based assessment of competing structural hypotheses.
+Through controlled synthetic experiments, we demonstrate how segmentation emerges, stabilizes, or dissolves as data are progressively corrupted by scale changes and noise, reflecting conditions commonly encountered in real-world actuarial and industrial applications.
+
+\end{abstract}

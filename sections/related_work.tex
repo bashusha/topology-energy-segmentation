@@ -1,0 +1,71 @@
+\section{Related Work}
+
+The proposed framework intersects several established lines of research, including drift detection and model monitoring, manifold and topology-aware learning, graph-based segmentation, and structural diagnostics for heterogeneous data. This section reviews the most relevant directions and clarifies the positioning of the present work among them.
+
+\subsection{Drift Detection and Model Monitoring}
+
+A large body of literature addresses the problem of detecting changes in data distributions over time, commonly referred to as concept drift or dataset shift \cite{Lu2019ConceptDrift, Gama2014SurveyDrift}.
+ Classical approaches focus on marginal feature distributions, target distributions, or model residuals, using statistical tests, divergence measures, or summary statistics.
+
+While effective as first-line monitoring tools, such methods typically operate on low-dimensional projections of the data and do not directly address structural heterogeneity in the conditional relationship between covariates and targets. In particular, they provide limited guidance on whether observed degradation reflects transient noise, gradual drift, or persistent structural regimes that would justify changes in model structure.
+
+The present work is complementary to drift detection. Rather than replacing standard monitoring tools, it addresses a second-order diagnostic question: whether the assumption of a single global predictive model remains structurally valid given observed local inconsistencies in the conditional distribution $F \mid X$.
+
+\subsection{Manifold Learning and Topology-Aware Methods}
+
+Methods from manifold learning and nonlinear dimensionality reduction, such as diffusion maps and related spectral techniques, aim to uncover low-dimensional geometric structure in high-dimensional data \cite{Coifman2006DiffusionMaps, vonLuxburg2007SpectralClustering}.
+These approaches have been extended to clustering and segmentation tasks by exploiting spectral properties of neighborhood graphs.
+
+Related work in topological data analysis (TDA) studies global and local topological features of data using tools such as persistent homology. These methods provide powerful invariants for detecting holes, intersections, and other nontrivial geometric structures.
+
+However, most topology-aware methods focus primarily on the geometry of the feature space and do not explicitly incorporate discrepancies in target behavior. In contrast, the proposed framework integrates geometric locality with outcome-driven disagreement. Topological concepts are employed implicitly through graph locality and connectivity, without relying on explicit TDA constructions. Geometry serves as a scaffolding for diagnostics rather than as an objective in itself. Neighborhood graphs used in such methods often rely on generic similarity measures, including mixed-type distances for heterogeneous data \cite{Gower1971Similarity}.
+
+
+\subsection{Graph-Based Segmentation and Energy Minimization}
+
+Graph-based segmentation using energy functionals has a long history in computer vision and clustering, including Potts models, Mumford--Shah-type formulations \cite{MumfordShah1989}, and related variational approaches such as active contours \cite{ChanVese2001}.
+
+These approaches typically balance data fidelity, smoothness across edges, and complexity penalties to obtain coherent partitions.
+
+The present work adopts an energy-based perspective but differs in both intent and construction. The energy functional is not optimized to produce a final predictive partition, but to diagnose whether stable structural boundaries exist at all. Edge weights are derived from discrepancies in target behavior rather than purely geometric similarity.
+
+The contribution does not lie in introducing a new class of energy functions or optimization techniques, but in the construction of the data-consistency term under low signal-to-noise conditions and in the dual-frame perspective that explicitly separates geometric locality in $X$ from inconsistency in $F \mid X$.
+
+\subsection{Structural Heterogeneity and Regime Detection}
+
+Several specialized algorithms aim to detect intersecting manifolds or regime boundaries by analyzing local tangent spaces, curvature, or density variations, including early work on manifold intersection detection \cite{DeutschMedioni2015}.
+ Early work by Deutsch and Medioni, among others, explicitly targets the detection of manifold intersections through geometric cues.
+
+Related ideas also appear in regime detection and mixture modeling, particularly in time series analysis, where data are assumed to arise from multiple latent regimes with distinct statistical properties \cite{Hamilton1989, Same2011RegimeSegmentation}.
+ Such methods often rely on explicit parametric assumptions, strong signal-to-noise ratios, or well-separated regimes.
+
+While conceptually related, these approaches are frequently sensitive to noise and assume relatively clean structure. The present framework is designed for low signal-to-noise, heterogeneous tabular data, where geometric signals alone are insufficient and must be combined with outcome-based diagnostics to assess structural validity.
+
+\subsection{Positioning of the Present Work}
+
+In summary, this work does not propose a new clustering or dimensionality reduction algorithm. Instead, it introduces a diagnostic framework that synthesizes ideas from topology-aware learning, graph-based segmentation, and statistical model validation to address a practical modeling question: when does segmentation represent a justified structural response, rather than an overreaction to noise?
+
+By framing segmentation as a diagnostic hypothesis and providing both frequentist and Bayesian interpretations of the resulting energy landscape, the approach bridges methodological traditions while remaining grounded in applied modeling constraints. Segmentation is treated as evidence of structural incompatibility with a global model, not as a modeling objective in itself.
+
+To further clarify this positioning, Table~\ref{tab:positioning} provides a high-level conceptual comparison with related methodological directions.
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\hline
+\textbf{Direction} & \textbf{Primary goal} & \textbf{Typical signal} & \textbf{Output} & \textbf{Role of segmentation} \\
+\hline
+Drift detection & Detect distributional change & Marginals, residuals & Alarm / score & Not explicit \\
+Manifold learning / TDA & Recover geometric structure & Geometry of $X$ & Embedding / topology & Primary objective \\
+Graph-based segmentation & Partition data & Similarity, smoothness & Final segmentation & Optimization goal \\
+Regime-switching / mixtures & Model heterogeneity & Parametric $F \mid X$ & Fitted regimes & Assumed structure \\
+This work & Diagnose structural validity & Local inconsistency in $F \mid X$ & Diagnostic segmentation & Hypothesis to be validated \\
+\hline
+\end{tabular}
+}
+\caption{Conceptual comparison of the proposed framework with related methodological approaches. The proposed method treats segmentation as diagnostic evidence rather than as a modeling objective.}
+\label{tab:positioning}
+\end{table}
+
+Accordingly, the proposed framework is best viewed as a second-line structural diagnostic tool for low signal-to-noise tabular data, positioned between first-line drift monitoring and full model restructuring.

@@ -1,0 +1,155 @@
+\section{Diagnostics and Validation Principles}
+
+The proposed method is not intended to produce a segmentation by default.
+Instead, segmentation is treated as a diagnostic outcome that must be justified
+by multiple, mutually consistent signals.
+
+This section describes diagnostic principles used to assess whether a detected
+partition corresponds to a meaningful structural obstacle to a global predictive
+model, rather than a noise-driven artifact.
+
+From a Bayesian perspective, these diagnostics can also be interpreted as
+posterior checks on the plausibility of competing structural hypotheses,
+providing qualitative evidence in favor of or against increased structural
+complexity.
+
+\subsection{Energy path analysis}
+
+During agglomerative minimization, the full energy path
+\[
+E(K), \quad K = m, m-1, \dots, 1
+\]
+is recorded.
+
+Diagnostics include:
+\begin{itemize}
+\item identification of energy elbows or plateaus;
+\item analysis of marginal energy reduction $\Delta E$ per merge;
+\item detection of regimes where further fragmentation yields diminishing
+returns.
+\end{itemize}
+
+A selected value of $K$ is interpretable only if the energy decrease up to $K$
+is substantial relative to the complexity penalty.
+
+In Bayesian terms, pronounced elbows in the energy trajectory correspond to
+regions where posterior support shifts from favoring a single global structure
+to favoring multiple structural explanations. Flat energy paths indicate weak
+evidence and correspondingly diffuse posterior mass over segmentations.
+
+\subsection{Spatial localization of cut edges}
+
+Edges with high disagreement weights that connect different zones
+(\emph{cut edges}) are examined in the covariate space $X$.
+
+A meaningful segmentation is characterized by:
+\begin{itemize}
+\item concentration of cut edges in localized regions of $X$;
+\item alignment of cut locations with geometrically ambiguous or overlapping
+areas.
+\end{itemize}
+
+Diffuse or uniformly distributed cut edges indicate over-segmentation or
+noise-driven artifacts.
+
+From a probabilistic viewpoint, localized cut edges suggest coherent regions
+where competing structural explanations concentrate, while diffuse boundaries
+reflect broadly distributed uncertainty rather than genuine structural breaks.
+
+\subsection{Boundary load per zone}
+
+For each zone, a boundary load is computed as the total weight of cut edges
+incident to the zone, optionally normalized by zone size.
+
+Zones with substantial boundary load are interpreted as necessary to
+accommodate strong local disagreements.
+Zones with near-zero boundary load are candidates for merging.
+
+In Bayesian terms, zones with high boundary load correspond to regions with
+strong posterior tension between local and global structural explanations,
+while low boundary load indicates weak evidence for maintaining separation.
+
+\subsection{Between- and within-zone variability of the target}
+
+To verify that zones differ in a meaningful way with respect to the target
+variable $F$, between-zone and within-zone variability measures are computed.
+
+Depending on the target type, this may involve:
+\begin{itemize}
+\item variance decomposition;
+\item deviance or likelihood-based comparisons;
+\item nonparametric tests such as PERMANOVA.
+\end{itemize}
+
+A valid segmentation should increase between-zone variability while reducing
+within-zone heterogeneity.
+
+From a Bayesian perspective, this corresponds to posterior predictive checks:
+well-supported segmentations induce clearly distinguishable predictive
+distributions across zones, while unsupported ones fail to separate posterior
+predictive behavior.
+
+\subsection{Improvement of local predictive models}
+
+Global predictive models are compared against collections of zone-specific
+local models.
+
+Diagnostics focus on:
+\begin{itemize}
+\item improvement in predictive scores (e.g.\ deviance, log-likelihood);
+\item robustness of improvements across folds or time slices;
+\item absence of systematic overfitting in small zones.
+\end{itemize}
+
+If local models do not outperform the global model in a stable manner, the
+segmentation is rejected.
+
+In Bayesian terms, this comparison can be interpreted as an informal model
+comparison: segmentation is supported only if local models achieve consistent
+posterior predictive gains relative to the global model.
+
+\subsection{Comparison with geometry-only clustering}
+
+Results are compared with geometry-based clustering methods, such as spectral
+clustering applied to the locality graph.
+
+Interpretation guidelines include:
+\begin{itemize}
+\item geometry $=1$, energy $>1$: conflict arises from $F \mid X$, not geometry;
+\item geometry $>1$, energy $\approx$ geometry: structural geometric separation
+dominates;
+\item geometry $>1$, energy $=1$: geometric separation not supported by the
+target.
+\end{itemize}
+
+This comparison clarifies whether segmentation is driven by predictive
+disagreement or purely geometric effects.
+
+\subsection{Temporal stability}
+
+When data are available across time slices, segmentations are compared using
+overlap measures such as the adjusted Rand index.
+
+Persistent zones across time are interpreted as structural obstacles, while
+transient zones appearing only under increased noise or scale changes are
+treated as artifacts.
+
+From a Bayesian perspective, temporal persistence can be viewed as repeated
+posterior support for the same structural hypothesis across comparable datasets,
+while instability reflects sensitivity to noise rather than genuine structure.
+
+\subsection{Validation with hidden variables (synthetic data)}
+
+In synthetic experiments, recovered zones are compared against latent variables
+and regime indicators.
+
+Validation focuses on:
+\begin{itemize}
+\item alignment with true regimes;
+\item diversity of zone assignments in overlapping regions;
+\item failure modes under increasing noise and scaling.
+\end{itemize}
+
+These experiments are used to probe the limits of detectability rather than to
+optimize performance. In Bayesian terms, they illustrate how posterior support
+for segmentation degrades as signal-to-noise conditions worsen.

@@ -1,0 +1,14 @@
+\section{Introduction}
+
+Predictive models deployed in production environments are routinely monitored for performance degradation. Common first-line diagnostics include marginal drift detection, univariate or low-dimensional distributional comparisons, and stability checks on summary statistics. These tools are essential for quality control, yet they operate primarily in simple projections of the data and offer limited insight into higher-order structural changes.
+
+When such diagnostics indicate deterioration, the prevailing response is often to rebuild or retune the model. In practice, this can lead to frequent and costly model updates, sometimes performed even when performance later recovers without intervention. This pattern raises a fundamental question: \emph{when does observed instability reflect transient noise, and when does it signal a persistent structural mismatch that justifies segmentation or redesign of the model?}
+
+This work is motivated by applied scenarios in which model degradation was not caused by gradual drift along individual covariates, but by the emergence of regions in feature space where the relationship between predictors and target variables became inconsistent with a global modeling assumption. In such cases, neither univariate diagnostics nor routine hyperparameter adjustments provided reliable guidance. Segmentation of the model was a plausible organizational and engineering response, yet lacked principled diagnostic support.
+
+We argue that segmentation should be treated as a \emph{second-line diagnostic decision}, rather than a default corrective action. Specifically, segmentation is warranted only when there is evidence of stable structural heterogeneity that cannot be explained by noise or by smooth variation captured within a single model.
+
+To this end, we propose a topology-aware energy-based diagnostic framework that integrates geometric information from the feature space with discrepancies observed in the target behavior. The goal is not to optimize predictive accuracy per se, but to assess whether the data support the hypothesis that a single global model is structurally inadequate.
+From a modeling perspective, this diagnostic question can be interpreted either in frequentist terms, as a regularized assessment of structural adequacy, or in Bayesian terms, as an implicit comparison of competing structural hypotheses under a complexity-penalizing prior.
+
+Although the framework produces a partition of the dataset into zones, segmentation is not treated as an end in itself. Instead, zone formation is used as a diagnostic hypothesis: the emergence of stable, target-inconsistent regions indicates obstacles to a single global predictive model, while the absence of such regions is itself a meaningful outcome. In this sense, the proposed procedure should be viewed as a diagnostic tool rather than a clustering method aimed at uncovering latent groups.

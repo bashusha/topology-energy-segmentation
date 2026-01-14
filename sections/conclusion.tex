@@ -1,0 +1,33 @@
+\section{Conclusion}
+
+We have introduced a topology-aware, energy-based diagnostic framework for
+assessing structural uncertainty in predictive models.
+The central idea of the framework is to treat segmentation not as a modeling
+objective, but as a diagnostic hypothesis about the validity of a single global
+predictive relationship.
+
+By combining local geometric structure in the feature space with discrepancies
+in target behavior, the proposed diagnostics identify regions where global
+modeling assumptions systematically fail.
+At the same time, the framework is deliberately conservative: in the absence of
+stable structural signals, it favors simpler explanations and explicitly
+returns the global model.
+
+The energy-based formulation admits both frequentist and Bayesian
+interpretations, providing a unified view of structural adequacy that is
+compatible with established modeling traditions.
+Importantly, these interpretations do not alter the computational procedure,
+but offer complementary perspectives on the same diagnostic evidence.
+
+Through controlled synthetic experiments, we illustrated how segmentation
+emerges, stabilizes, or dissolves as data are progressively corrupted by scale
+changes and noise.
+These experiments reflect conditions commonly encountered in applied actuarial
+and industrial settings, where low signal-to-noise ratios complicate structural
+assessment.
+
+Overall, the proposed framework is intended as a second-line diagnostic tool,
+positioned between first-line drift monitoring and full model restructuring.
+By formalizing when segmentation is warranted—and when it is not—the approach
+supports more deliberate and interpretable responses to model instability in
+complex, heterogeneous data.

@@ -1,0 +1,202 @@
+\section{Dual-frame Graph-based Framework}
+
+The proposed framework decomposes the diagnostic task into two interacting but conceptually distinct components: a geometric frame, which encodes locality and comparability in the covariate space, and a target frame, which captures local inconsistencies in the conditional behavior of the target given the covariates. Together, these frames provide a structured basis for assessing whether segmentation is warranted.
+
+\subsection{Geometry Frame: Locality in \texorpdfstring{$X$}{X}}
+
+
+To assess structural heterogeneity, we construct a graph-based representation of the feature space that captures local geometry without assuming a global manifold structure. Nodes correspond to representative points (e.g., landmarks), and edges encode neighborhood relationships based on a suitable distance metric.
+
+This representation serves two purposes:
+\begin{itemize}
+    \item It localizes comparisons of target behavior to nearby regions in feature space.
+    \item It enables the identification of boundaries where local relationships change abruptly.
+\end{itemize}
+
+The framework is deliberately agnostic to the specific choice of distance or neighborhood construction, provided it yields a stable notion of local proximity.
+
+A sparse graph $G=(V,E)$ is constructed over landmark points using a local distance in $X$-space (e.g.\ Gower distance with $k$-nearest neighbors). The graph encodes local comparability but is not used directly for clustering. Its role is to provide a topological scaffold on which diagnostic comparisons of target behavior are performed.
+
+\subsection{Target Frame: Local Inconsistency in \texorpdfstring{$F \mid X$}{F | X}}
+
+
+While the geometry frame defines \emph{where} comparisons are made, the target frame defines \emph{what} is compared. Specifically, it captures discrepancies in the conditional behavior of the target variable $F$ among neighboring observations in the covariate space.
+
+We adopt an energy-based diagnostic perspective, in which segmentation is driven by the accumulation of local inconsistencies in $F \mid X$, rather than by geometric separation alone.
+
+Conceptually, the diagnostic energy consists of three components:
+\begin{itemize}
+    \item A \textbf{data term}, reflecting within-zone consistency of target behavior;
+    \item A \textbf{boundary term}, penalizing disagreements between neighboring nodes assigned to different zones, weighted by the severity of target discrepancies;
+    \item A \textbf{complexity penalty}, discouraging unnecessary proliferation of zones.
+\end{itemize}
+
+Minimizing this energy yields a segmentation that balances explanatory gain against structural complexity. Importantly, the shape of the energy landscape itself provides diagnostic information: flat regions indicate ambiguity or noise-dominated settings, while sharp changes or elbows suggest meaningful structural transitions.
+
+\subsection{Dual Interpretation}
+
+The proposed energy-based formulation admits two complementary interpretations.
+
+From a \textbf{frequentist perspective}, the energy corresponds to a regularized objective function. Introducing segmentation reduces residual structural inconsistency in $F \mid X$, but incurs a penalty proportional to the number of zones. The balance between these terms reflects a trade-off between explanatory adequacy and model complexity.
+
+From a \textbf{Bayesian perspective}, the same energy can be interpreted as a negative log-posterior over structural hypotheses. The data and boundary terms correspond to a likelihood capturing local disagreement in $F \mid X$, while the complexity penalty acts as an implicit prior favoring parsimonious structural explanations.
+
+These interpretations are mathematically compatible and lead to identical computational procedures. The dual framing allows the method to be situated naturally within both statistical and probabilistic modeling traditions, without altering its algorithmic core.
+
+
+\subsection{Energy-based Segmentation Algorithm}
+\label{subsec:energy_realization}
+
+This section describes the concrete algorithmic realization of the proposed
+diagnostic framework. The goal is not to optimize predictive performance
+directly, but to explore the space of possible segmentations and assess whether
+any of them provide stable and interpretable reductions in structural
+inconsistency between covariates and targets.
+
+The algorithm operates on a graph-based representation of the data and produces
+a sequence of candidate segmentations with increasing structural complexity.
+Rather than selecting a single partition a priori, it exposes the full
+energy--complexity trade-off for diagnostic inspection.
+
+\subsection{Notation and energy definition}
+
+Let $G = (V,E)$ denote a locality graph constructed over a set of $n$ landmark
+observations. Each node $i \in V$ corresponds to a landmark point $(X_i, F_i)$.
+A segmentation is represented by zone labels
+\[
+z_i \in \{1,\dots,K\}, \quad i \in V,
+\]
+where $K$ denotes the number of zones.
+
+Each zone $k$ is associated with parameters $\phi_k$ summarizing the local
+behavior of the target variable $F \mid X$ within that zone. The specific form
+of $\phi_k$ depends on the application and may range from simple moment-based
+summaries to fitted local predictive or distributional models.
+
+We define an energy functional of the form
+\[
+E(z,\phi)
+\;=\;
+\sum_{i=1}^{n} \ell_i\bigl(\phi_{z_i}\bigr)
+\;+\;
+\lambda \sum_{(i,j)\in E} w_{ij}\,\mathbf{1}[z_i \neq z_j]
+\;+\;
+\alpha\,K .
+\]
+
+The first term is a \emph{data-consistency term} measuring how well observation
+$i$ agrees with the target behavior of its assigned zone.
+The second term is a \emph{boundary penalty} that discourages separating
+neighboring observations with similar target behavior; edge weights $w_{ij}$
+encode local disagreement in $F \mid X$.
+The final term penalizes the number of zones and controls structural complexity.
+
+From a frequentist perspective, this energy corresponds to a regularized
+objective balancing explanatory adequacy against model complexity.
+From a Bayesian perspective, the same functional can be interpreted as a
+negative log-posterior, with the complexity term acting as an implicit prior
+favoring parsimonious structural explanations. Importantly, both views lead to
+the same computational procedure.
+
+\subsection{Edge weights and disagreement metrics}
+
+The quality of the diagnostic segmentation depends critically on how local
+disagreement in target behavior is quantified. Direct computation of rich
+distributional discrepancies for all candidate segmentations is often
+computationally infeasible.
+
+To address this, we adopt a two-phase strategy.
+
+In \emph{Phase A}, surrogate disagreement measures $\tilde{w}_{ij}$ are computed
+for each edge $(i,j)\in E$ using low-complexity summaries of local target
+behavior, such as moment differences, residual contrasts, or simplified
+predictive discrepancies. These surrogates are designed to be inexpensive and
+robust, and are used solely to guide the exploration of candidate partitions.
+
+In \emph{Phase B}, for a restricted set of candidate segmentations, edge weights
+$w_{ij}$ are recomputed using richer discrepancy measures, such as energy
+distance, Hellinger distance between fitted mixtures, or posterior predictive
+divergence in Bayesian models. This refinement step is used for validation and
+interpretation rather than for large-scale search.
+
+\subsection{Two-phase optimization procedure}
+
+The algorithm follows an agglomerative strategy operating on the locality graph.
+Starting from singleton zones, zones are iteratively merged to minimize a
+surrogate energy
+\[
+\tilde{E}(z)
+=
+\sum_{(i,j)\in E} \tilde{w}_{ij}\,\mathbf{1}[z_i \neq z_j]
++
+\alpha\,K .
+\]
+
+This procedure produces an ordered sequence of candidate partitions, along with
+the full energy path as a function of $K$. The role of surrogate metrics at this
+stage is intentionally limited: false positives are acceptable and filtered
+out during refinement, while false negatives are mitigated by conservative
+thresholding and neighborhood aggregation.
+
+Rather than selecting a single optimum automatically, the algorithm retains
+multiple candidate segmentations corresponding to stable regions or elbows in
+the energy trajectory. For these candidates, the refined energy $E(z)$ is
+evaluated using richer disagreement measures.
+
+If no candidate segmentation yields a meaningful or stable improvement over the
+global model ($K=1$), the algorithm explicitly returns the unsegmented solution,
+treating abstention from segmentation as a valid diagnostic outcome.
+
+\subsection{Temporal consistency}
+
+When data are available across multiple time slices, the diagnostic procedure
+can be applied independently to each slice. Resulting segmentations are
+compared using overlap measures such as the adjusted Rand index.
+
+Zones that persist across time are interpreted as stable structural obstacles to
+a single global model. In contrast, zones that appear only sporadically under
+increased noise or scale changes are treated as artifacts rather than actionable
+signals. Temporal consistency thus provides an additional layer of validation
+for segmentation decisions.
+
+\subsection{Algorithmic summary}
+
+Algorithm~\ref{alg:topology_energy_segmentation} summarizes the full
+topology-aware energy-based segmentation procedure, including landmark
+selection, graph construction, surrogate screening, refinement, and diagnostic
+output.
+
+
+\label{subsec:algorithm}
+
+\begin{algorithm}[h]
+\caption{Topology-Aware Energy-Based Segmentation}
+\label{alg:topology_energy_segmentation}
+\begin{algorithmic}[1]
+
+\STATE \textbf{Input:}
+Covariates $X=\{X_i\}_{i=1}^n$, targets $F=\{F_i\}_{i=1}^n$,
+number of landmarks $m$, neighborhood size $k$,
+complexity penalty $\alpha$,
+surrogate disagreement $\tilde{w}$,
+refined disagreement $w$ (optional)
+
+\STATE \textbf{Output:}
+Zone labels $z_i$ for landmarks, diagnostic metadata
+
+\STATE Select landmarks $\mathcal{L} \subset \{1,\dots,n\}$, $|\mathcal{L}|=m$
+\STATE Construct kNN graph $G=(V,E)$ over $\{X_i\}_{i\in\mathcal{L}}$
+\STATE Compute surrogate edge weights $\tilde{w}_{ij}$
+
+\STATE Initialize each landmark as a singleton zone
+\STATE Iteratively merge zones to minimize surrogate energy
+\STATE Select candidate partitions along energy path
+
+\IF{refinement enabled}
+  \STATE Recompute $w_{ij}$ and evaluate refined energy
+\ENDIF
+
+\STATE Select final partition or return global model
+
+\end{algorithmic}
+\end{algorithm}
