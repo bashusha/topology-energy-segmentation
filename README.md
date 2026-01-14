@@ -30,22 +30,22 @@ optimizing for predictive performance.
 ---
 
 ## Repository Structure
-├── main.tex
-├── preamble.tex
-├── sections/
-│ ├── abstract.tex
-│ ├── introduction.tex
-│ ├── related_work.tex
-│ ├── problem_formulation.tex
-│ ├── framework.tex
-│ ├── algorithm.tex
-│ ├── diagnostics.tex
-│ ├── experiments.tex
-│ ├── observations.tex
-│ ├── discussion.tex
-│ └── conclusion.tex
-├── references.bib
-└── README.md
+├── main.tex  
+├── preamble.tex  
+├── sections/  
+│ ├── abstract.tex  
+│ ├── introduction.tex  
+│ ├── related_work.tex  
+│ ├── problem_formulation.tex  
+│ ├── framework.tex  
+│ ├── algorithm.tex  
+│ ├── diagnostics.tex  
+│ ├── experiments.tex  
+│ ├── observations.tex  
+│ ├── discussion.tex  
+│ └── conclusion.tex  
+├── references.bib  
+└── README.md  
 
 ---
 
@@ -66,7 +66,7 @@ This repository reflects an active research draft.
 The structure and core methodology are stable; refinements are primarily
 expository and stylistic.
 
-##Author
+## Author
 
-Xana Verte
+Xana Verte  
 Axiolyze Lab
