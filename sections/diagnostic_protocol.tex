@@ -1,0 +1,97 @@
+\section{Controlled Diagnostic Protocol}
+
+This section describes a controlled diagnostic protocol designed to examine the
+qualitative behavior and internal consistency of the proposed framework under
+progressive degradation of structural signals. The goal is not empirical
+validation or performance benchmarking, but to clarify how diagnostic signals
+emerge, stabilize, or dissolve as the underlying structure becomes weaker or
+increasingly obscured by noise.
+
+Real-world datasets rarely provide ground truth regarding structural
+heterogeneity. Observed changes in predictive performance may arise from
+transient noise, scale effects, or genuine structural mismatch, and these
+factors are often entangled. To disentangle them conceptually, we consider
+synthetic constructions in which specific sources of degradation can be
+introduced in a controlled and interpretable manner.
+
+From a Bayesian perspective, the protocol can be viewed as probing how posterior
+support shifts between competing structural hypotheses --- a single global model
+versus segmented alternatives --- as signal-to-noise conditions deteriorate.
+Persistent support for the global hypothesis under increasing variability is
+treated as a meaningful diagnostic outcome, rather than a failure of the method.
+
+\subsection{Motivation}
+
+The protocol is motivated by practical diagnostic questions rather than by
+model optimization. In applied settings, practitioners often face ambiguity as
+to whether observed instability reflects noise amplification or the emergence
+of structurally distinct regimes. Standard first-line diagnostics are typically
+insensitive to such distinctions.
+
+The controlled constructions considered here are intended to clarify when the
+proposed diagnostics indicate meaningful structural heterogeneity, when they
+remain inconclusive, and when they explicitly favor retaining a global modeling
+assumption.
+
+\subsection{Protocol: \texorpdfstring{Time $\rightarrow$ Scale $\times$ Noise}{Time to Scale x Noise}}
+
+Each dataset is organized into a sequence of discrete time slices. At the
+initial time point, the data exhibit clear structural properties with minimal
+noise and well-separated local behaviors. Subsequent slices apply controlled
+transformations designed to progressively degrade structural identifiability.
+
+Specifically, we consider two classes of transformations:
+\begin{itemize}
+    \item multiplicative scaling of the target variable, intended to simulate
+    changes in exposure, volume, or magnitude without altering conditional
+    structure;
+    \item additive noise applied to covariates and/or targets, reducing the
+    effective signal-to-noise ratio and blurring local distinctions.
+\end{itemize}
+
+These transformations are applied incrementally across time slices, producing a
+trajectory from clearly structured regimes toward ambiguous or noise-dominated
+settings. This design mirrors practical scenarios in which data quality or
+comparability degrades gradually rather than abruptly.
+
+\subsection{Expected Diagnostic Signals}
+
+Rather than reporting performance metrics, the protocol examines qualitative and
+structural diagnostic signals produced by the framework as conditions change.
+The following aspects are monitored:
+\begin{itemize}
+    \item the stability or instability of the inferred number of zones across
+    successive slices;
+    \item the localization of high-energy boundaries in feature space and their
+    persistence under increasing noise;
+    \item relative changes in the adequacy of local predictive summaries compared
+    to a global baseline;
+    \item consistency of inferred segmentations across adjacent time slices.
+\end{itemize}
+
+Importantly, the absence of segmentation, or the collapse of previously detected
+zones under increased noise, is treated as a valid and informative diagnostic
+outcome. Such behavior indicates insufficient evidence to justify increased
+structural complexity.
+
+\subsection{Interpretation}
+
+From a frequentist perspective, the protocol illustrates how regularized
+structural diagnostics respond to decreasing signal strength and increasing
+variability. Flat or weakly informative energy landscapes correspond to
+noise-dominated regimes, while sharp transitions or stable elbows indicate
+structural signals that persist despite degradation.
+
+From a Bayesian perspective, these observations correspond to posterior mass
+remaining concentrated on simpler structural hypotheses unless the data provide
+consistent and localized evidence to support segmentation. In this sense, the
+protocol highlights not only when segmentation is suggested, but also when it is
+explicitly discouraged.
+
+The purpose of this controlled diagnostic analysis is not empirical validation,
+but to clarify how the proposed framework behaves under interpretable and
+progressively degraded conditions. No claims are made regarding optimality,
+predictive superiority, or comparative performance relative to alternative
+methods. The constructions considered here serve solely as sanity checks for the
+internal logic of the framework and as guidance for its practical diagnostic
+interpretation.

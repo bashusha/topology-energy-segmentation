@@ -1,19 +1,49 @@
 \section{Discussion and Limitations}
 
-The experimental results illustrate that topology-aware energy-based diagnostics
-can distinguish between transient noise-induced fluctuations and persistent
-structural heterogeneity.
-In clean synthetic settings, segmentation emerges only where the
-data-generating process contains genuine regime boundaries.
-As noise increases, the framework naturally suppresses over-segmentation,
-reflecting increased uncertainty rather than failure of the method.
+The proposed framework is designed as a conservative diagnostic tool rather
+than as a segmentation method by default.
+Structural segmentation is treated as a hypothesis that must be supported by
+stable and interpretable diagnostic signals, rather than as an outcome to be
+optimized or enforced.
 
-A central aspect of the proposed framework is its conservative behavior.
-Segmentation is not produced by default and is explicitly rejected when
-diagnostic signals are weak, unstable, or inconsistent across validation
-criteria.
-Intentional abstention from segmentation is treated as a valid diagnostic
-outcome, indicating insufficient evidence to justify increased model complexity.
+A key feature of the diagnostics is their ability to explicitly abstain from
+segmentation.
+When disagreement signals are weak, unstable, or inconsistent across validation
+criteria, the framework favors simpler structural explanations and returns the
+global model.
+This behavior is intentional and reflects uncertainty in the data rather than a
+failure of the method.
+
+As structural signals degrade, for example due to increasing noise or reduced
+local sample sizes, diagnostic criteria become less decisive and energy
+differences between candidate segmentations flatten.
+In such regimes, the complexity penalty dominates, suppressing spurious
+segmentation and reinforcing parsimony.
+From a Bayesian perspective, this corresponds to posterior support remaining
+concentrated on simpler structural hypotheses as the likelihood becomes less
+informative.
+
+Importantly, the framework is insensitive to uniform scale transformations of
+the target variable.
+Changes in magnitude alone do not induce segmentation unless they are associated
+with genuine inconsistencies in conditional target behavior.
+This property reflects the diagnostic focus on structural conflict in
+$F \mid X$, rather than on absolute error levels.
+
+Compared to geometry-driven clustering approaches, the proposed diagnostics are
+orthogonal in spirit.
+Segmentation is triggered by disagreements in predictive or distributional
+behavior rather than by separation in feature space alone.
+As a result, the framework can detect structurally meaningful conflicts even in
+settings where geometric separation is weak or absent.
+
+Temporal persistence, when comparable data slices are available, can be used as
+an auxiliary interpretational signal.
+Segmentations that are stable across time are more plausibly associated with
+persistent structural obstacles, while transient or unstable zones are treated
+with caution.
+Temporal consistency is therefore interpreted as supportive evidence rather than
+as a primary decision criterion.
 
 \subsection{Role of the complexity penalty}
 
@@ -21,65 +51,39 @@ The complexity penalty parameter $\alpha$ plays a role analogous to model
 selection penalties in classical statistical learning.
 Rather than admitting a universally optimal choice, $\alpha$ is intended to be
 used diagnostically.
-Smaller values allow the method to reveal candidate structural inconsistencies,
-while larger values enforce conservative behavior and favor global models.
+Smaller values allow the framework to surface candidate structural
+inconsistencies, while larger values enforce conservative behavior and favor
+global explanations.
 
-In practice, we recommend sensitivity analysis over a narrow range of $\alpha$
-values, combined with inspection of energy--complexity trade-offs (e.g.,
-elbow-type behavior) and temporal stability when repeated data slices are
-available.
-This use of $\alpha$ aligns with the interpretation of segmentation as a
-hypothesis to be evaluated rather than as an optimization target.
-
-\subsection{Interpretational perspectives}
-
-From a frequentist perspective, the framework can be viewed as a regularized
-assessment of structural adequacy, balancing reductions in local inconsistency
-against penalties for increased complexity.
-From a Bayesian perspective, the same procedure corresponds to implicit
-comparison of competing structural hypotheses under a prior favoring
-parsimony.
-
-These interpretations are complementary and lead to identical computational
-procedures.
-The Bayesian framing is intended as an interpretational aid rather than as a
-fully specified probabilistic generative model.
+In practice, sensitivity analysis over a narrow range of $\alpha$ values,
+combined with inspection of energy--complexity trade-offs and stability
+considerations, provides a more informative assessment than selecting a single
+fixed value.
 
 \subsection{Computational considerations}
 
 The framework involves several computational trade-offs.
-In particular, the refinement phase based on rich distributional disagreement
-metrics can be computationally expensive.
-For this reason, it is applied only to a restricted set of candidate
-segmentations identified during the surrogate phase.
+In particular, refined disagreement measures based on rich distributional
+comparisons can be computationally expensive.
+For this reason, they are applied only to a restricted set of candidate
+segmentations identified during the surrogate screening phase.
 
 The use of landmarks and sparse locality graphs further reflects a deliberate
 design choice to balance diagnostic sensitivity with computational feasibility.
-The framework is intended primarily for offline structural assessment rather
-than for real-time deployment.
+The framework is intended primarily for offline structural assessment rather than
+for real-time deployment.
 
-\subsection{Limitations}
+\subsection{Limitations and future directions}
 
-The proposed diagnostics are subject to several important limitations.
-Reliable detection of structural heterogeneity requires sufficient data within
-each candidate zone; rare regimes with very small sample sizes may remain
-undetectable.
+The proposed diagnostics require sufficient data within candidate zones to
+support reliable local comparisons.
+Rare regimes with very small sample sizes may remain undetectable.
 The method also depends on the construction of a meaningful locality graph; poor
 choices of distance metrics or neighborhood sizes can degrade diagnostic quality.
 
-Finally, while the framework is designed for low signal-to-noise tabular data, it
-does not guarantee segmentation in all such settings.
-In highly noisy regimes, the diagnostics correctly favor simpler explanations,
-but this may limit interpretability in cases where weak structure is present but
-statistically indistinguishable from noise.
-
-\subsection{Extensions and future directions}
-
-Several extensions of the framework are conceptually straightforward but are not
-systematically explored in this work.
-These include the use of more expressive topological diagnostics, bootstrap-based
-stability assessments, and richer Bayesian formulations with explicit priors over
-segmentations.
-
-We leave a comprehensive empirical evaluation of these extensions for future
+Several extensions are conceptually straightforward but are not explored in this
 work.
+These include richer Bayesian formulations with explicit priors over
+segmentations, bootstrap-based stability assessments, and more expressive
+topological diagnostics.
+We leave systematic empirical evaluation of these directions for future work.
